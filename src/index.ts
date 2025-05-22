@@ -233,12 +233,13 @@ function cacheEntryState<K, V>(
   const { maxAge = 0, staleWhileRevalidate = 0 } =
     cacheEntry.result.cacheControl ?? {};
 
-  if (now <= cacheEntry.createdAt + maxAge) {
-    return "Fresh";
-  } else if (now <= cacheEntry.createdAt + maxAge + staleWhileRevalidate) {
-    return "Stale";
-  } else {
-    return "Expired";
+  switch (true) {
+    case now <= cacheEntry.createdAt + maxAge:
+      return "Fresh";
+    case now <= cacheEntry.createdAt + maxAge + staleWhileRevalidate:
+      return "Stale";
+    default:
+      return "Expired";
   }
 }
 
