@@ -8,4 +8,4 @@ Once we release the first major version (i.e., 1.x), we will reconsider this pol
 ## Reporting a Vulnerability
 
 If you believe you have found a security vulnerability, let us know right away.
-Use the GitHub Security Advisory ["Report a Vulnerability"](https://github.com/wereHamster/saira/security/advisories/new) tab.
+Use the GitHub Security Advisory [Report a Vulnerability](https://github.com/wereHamster/saira/security/advisories/new) tab.
