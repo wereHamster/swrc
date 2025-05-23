@@ -1,6 +1,6 @@
-# Stale-While-Revalidate-Cache (SWRC)
+# Saira
 
-SWRC is a library that aids implementing stale-while-revalidate style caches.
+Saira is a library that aids implementing stale-while-revalidate style caches.
 
 ### Goals
 
@@ -37,7 +37,7 @@ Further API for your convenience:
 - **Step 3:** Whenever you want to look up a value in the cache, use the `lookup` function. It automatically loads the value if it's not present in the cache, and will revalidate it based on your cache control settings.
 
 ```typescript
-import { newHandle, lookup, Result } from "swrc";
+import { newHandle, lookup, Result } from "saira";
 
 type Key = URL;
 type Value = unknown; /* ~ JSON */
