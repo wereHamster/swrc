@@ -44,7 +44,9 @@ export interface Handle<K, V> {
    * be evicted). When it fires, it schedules the next timer or sets this
    * field to 'undefined' (if the cache becomes empty).
    */
-  evictor: undefined | { runAt: Timestamp; timeoutId: number };
+  evictor:
+    | undefined
+    | { runAt: Timestamp; timeoutId: ReturnType<typeof setTimeout> };
 }
 
 /**
