@@ -3,7 +3,7 @@
 ## Supported Versions
 
 While the project remains in the 0.x version range, only the latest version will be supported.
-Once we release the first major version (ie. 1.x), we will reconsider this policy.
+Once we release the first major version (i.e., 1.x), we will reconsider this policy.
 
 ## Reporting a Vulnerability
 
