@@ -30,7 +30,7 @@ jobs:
         env:
           TAG: ${{ github.event.release.tag_name }}
 
-      - run: rm dist/*.test.* dist/*example*
+      - run: rm dist/*.test.* dist/example.*
 
       - run: npm publish --provenance --access public dist/
         env:
