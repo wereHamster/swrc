@@ -21,3 +21,4 @@ jobs:
 
       - run: biome lint .
       - run: ./node_modules/.bin/tsc
+      - run: node --test dist/index.test.js
