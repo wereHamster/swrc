@@ -1,7 +1,7 @@
 import { type Result, newHandle, lookup } from "./index.js";
 
 type Key = URL;
-type Value = any;
+type Value = unknown;
 
 const handle = newHandle<Key, Value>({
   /*
@@ -99,7 +99,6 @@ async function main() {
   const value5 = await lookup(handle, key);
   console.timeEnd("lookup5");
   console.log({ value5 });
-
 }
 
 main();
