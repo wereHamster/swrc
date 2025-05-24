@@ -181,6 +181,8 @@ function scheduleEvictor<K, V>(
       runAt,
       timeoutId: setTimeout(
         () => {
+          h.evictor = undefined;
+
           const cacheEntry = h.cache.get(keyValue);
 
           /*
