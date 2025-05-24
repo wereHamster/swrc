@@ -70,7 +70,10 @@ describe("lookup", () => {
       },
     });
 
-    const [a, b] = await Promise.all([lookup(handle, "key"), lookup(handle, "key")]);
+    const [a, b] = await Promise.all([
+      lookup(handle, "key"),
+      lookup(handle, "key"),
+    ]);
     assert.equal(a.cacheEntry.result.value, 0);
     assert.equal(b.cacheEntry.result.value, 0);
   });
@@ -79,8 +82,24 @@ describe("lookup", () => {
     // TODO
   });
 
-  it.skip("should evict expired entries", () => {
-    // TODO
+  it("should evict expired entries", async () => {
+    const handle = newHandle<string, unknown>({
+      storeKey: (x) => x,
+      loader: async () => {
+        return {
+          value: {},
+          cacheControl: {
+            maxAge: 1,
+          },
+        };
+      },
+    });
+
+    await lookup(handle, "key1");
+    await lookup(handle, "key2");
+    assert.equal(handle.cache.size, 2);
+    await setTimeout(2000);
+    assert.equal(handle.cache.size, 0);
   });
 
   it.skip("should trigger a new load if looking up an expired entry before eviction", () => {
