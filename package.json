@@ -7,6 +7,7 @@
     ".": "./index.js"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.4",
     "@types/node": "^22.15.21",
     "typescript": "^5.8.3"
   }
