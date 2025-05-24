@@ -82,7 +82,26 @@ describe("lookup", () => {
     // TODO
   });
 
-  it("should evict expired entries", async () => {
+  it("should evict an expired entry", async () => {
+    const handle = newHandle<string, unknown>({
+      storeKey: (x) => x,
+      loader: async () => {
+        return {
+          value: {},
+          cacheControl: {
+            maxAge: 1,
+          },
+        };
+      },
+    });
+
+    await lookup(handle, "key");
+    assert.strictEqual(handle.cache.size, 1);
+    await setTimeout(2000);
+    assert.strictEqual(handle.cache.size, 0);
+  });
+
+  it("should evict multiple expired entries with the same expiry time", async () => {
     const handle = newHandle<string, unknown>({
       storeKey: (x) => x,
       loader: async () => {
@@ -99,6 +118,28 @@ describe("lookup", () => {
     await lookup(handle, "key2");
     assert.strictEqual(handle.cache.size, 2);
     await setTimeout(2000);
+    assert.strictEqual(handle.cache.size, 0);
+  });
+
+  it("should evict multiple expired entries with a different expiry times", async () => {
+    let counter = 1;
+    const handle = newHandle<string, unknown>({
+      storeKey: (x) => x,
+      loader: async () => {
+        return {
+          value: {},
+          cacheControl: {
+            maxAge: counter++,
+          },
+        };
+      },
+    });
+
+    await lookup(handle, "key1");
+    await lookup(handle, "key2");
+    await lookup(handle, "key3");
+    assert.strictEqual(handle.cache.size, 3);
+    await setTimeout(4000);
     assert.strictEqual(handle.cache.size, 0);
   });
 
