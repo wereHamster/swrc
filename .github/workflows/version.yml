@@ -24,6 +24,15 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@21a544727d0c62386e78b4befe52d19ad12692e3 # v17
       - run: nix run github:nicknovitski/nix-develop .#workflow
 
+      - run: |
+          if ./node_modules/.bin/changeset status --output=release.json 2>/dev/null; then
+            echo "VERSION=$(jq -r '.releases[0].newVersion' release.json)" >> "$GITHUB_ENV"
+            rm release.json
+          fi
+
       - uses: changesets/action@e0145edc7d9d8679003495b11f87bd8ef63c0cba # v1.5.3
+        with:
+          title: "Release ${{ env.VERSION }}"
+          commit: "Release ${{ env.VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
