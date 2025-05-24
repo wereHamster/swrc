@@ -16,7 +16,7 @@ describe("lookup", () => {
     });
 
     const l = await lookup(handle, "key");
-    assert.equal(l.state, "Fresh");
+    assert.strictEqual(l.state, "Fresh");
   });
 
   it("should propagate loader rejection on initial lookup", async () => {
@@ -47,7 +47,7 @@ describe("lookup", () => {
     await lookup(handle, "key");
     await setTimeout(2000);
     const l = await lookup(handle, "key");
-    assert.equal(l.state, "Stale");
+    assert.strictEqual(l.state, "Stale");
   });
 
   it.skip("should transition to Expired state after maxAge + staleWhileRevalidate", () => {
@@ -74,8 +74,8 @@ describe("lookup", () => {
       lookup(handle, "key"),
       lookup(handle, "key"),
     ]);
-    assert.equal(a.cacheEntry.result.value, 0);
-    assert.equal(b.cacheEntry.result.value, 0);
+    assert.strictEqual(a.cacheEntry.result.value, 0);
+    assert.strictEqual(b.cacheEntry.result.value, 0);
   });
 
   it.skip("should de-duplicate concurrent lookups during revalidation", () => {
@@ -97,9 +97,9 @@ describe("lookup", () => {
 
     await lookup(handle, "key1");
     await lookup(handle, "key2");
-    assert.equal(handle.cache.size, 2);
+    assert.strictEqual(handle.cache.size, 2);
     await setTimeout(2000);
-    assert.equal(handle.cache.size, 0);
+    assert.strictEqual(handle.cache.size, 0);
   });
 
   it.skip("should trigger a new load if looking up an expired entry before eviction", () => {
