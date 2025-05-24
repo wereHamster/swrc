@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 import { newHandle, lookup } from "./index.js";
+import { setTimeout } from "node:timers/promises";
 
 describe("lookup", () => {
   it("should return a cache entry in fresh state on initial lookup", async () => {
@@ -15,7 +16,7 @@ describe("lookup", () => {
     });
 
     const l = await lookup(handle, "key");
-    assert.equal("Fresh", l.state);
+    assert.equal(l.state, "Fresh");
   });
 
   it("should propagate loader rejection on initial lookup", async () => {
@@ -29,8 +30,24 @@ describe("lookup", () => {
     await assert.rejects(lookup(handle, "key"), /Failed/);
   });
 
-  it.skip("should transition to Stale state after maxAge", () => {
-    // TODO
+  it("should transition to Stale state after maxAge", async () => {
+    const handle = newHandle<string, unknown>({
+      storeKey: (x) => x,
+      loader: async () => {
+        return {
+          value: {},
+          cacheControl: {
+            maxAge: 0,
+            staleWhileRevalidate: 5,
+          },
+        };
+      },
+    });
+
+    await lookup(handle, "key");
+    await setTimeout(2000);
+    const l = await lookup(handle, "key");
+    assert.equal(l.state, "Stale");
   });
 
   it.skip("should transition to Expired state after maxAge + staleWhileRevalidate", () => {
@@ -41,8 +58,21 @@ describe("lookup", () => {
     // TODO
   });
 
-  it.skip("should de-duplicate concurrent initial lookups", () => {
-    // TODO
+  it("should de-duplicate concurrent initial lookups", async () => {
+    let counter = 0;
+    const handle = newHandle<string, unknown>({
+      storeKey: (x) => x,
+      loader: async () => {
+        await setTimeout(10);
+        return {
+          value: counter++,
+        };
+      },
+    });
+
+    const [a, b] = await Promise.all([lookup(handle, "key"), lookup(handle, "key")]);
+    assert.equal(a.cacheEntry.result.value, 0);
+    assert.equal(b.cacheEntry.result.value, 0);
   });
 
   it.skip("should de-duplicate concurrent lookups during revalidation", () => {
